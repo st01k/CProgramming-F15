@@ -1,0 +1,160 @@
+/*
+*****************************************************************************************************************
+*                                            Monthly Payment Calculator                                         *
+*                                            Version: 0.1                                                       *
+*                                            Chapter 6, Assignment 6.1                                          *
+*                                            Author: Casey Murphy                                               *
+*                                            Date Created: 28 Sep 15                                            *
+*                                            Last Modified: 29 Sep 15                                           *
+* ------------------------------------------------------------------------------------------------------------- *
+*                            Calculates monthly payments for a loan based on user input                         *
+*****************************************************************************************************************
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>                                                   //for exponent usage
+
+#define MO_P_YR 12.00
+
+//function declarations
+void getInfo    (float* loan, float*  iRate, int*    years);        //gets user input
+void calcMoPay  (float* loan, float*  iRate, int*    years,
+                 float* mPay, int*    nMon,  double* mInt);         //calculates monthly payment
+void printInfo  (float* loan, float*  iRate, int*    years,
+                 float* mPay, int*    nMon,  double* mInt);         //prints loan info summary
+void printTab   (float* loan, float*  mPay,
+                 int*   nMon, double* mInt);                        //prints payment table
+
+
+int main()
+{
+    float   loanAmt;                                                //amount of loan - user input
+    float   yrInt;                                                  //yearly interest, percent - user input
+    int     yrAmt;                                                  //number of years financed - user input
+
+    getInfo     (&loanAmt, &yrInt, &yrAmt);
+//printf ("\nin main: %f, %f, %d\n", loanAmt, yrInt, yrAmt);
+
+    float    mPayment;                                              //monthly payment - calculated
+    double   monInt;                                                //monthly interest rate - percent
+    int      numMon;                                                //number of months based on year input
+
+    calcMoPay   (&loanAmt,  &yrInt,    &yrAmt,
+                 &mPayment, &numMon,   &monInt);
+//printf ("\nin main, number of months: %d\n", numMon);
+//printf ("\nin main, monthly interest: %f\n", monInt);
+//printf ("\nin main, monthly payment: %f\n", mPayment);
+    printInfo   (&loanAmt,  &yrInt,    &yrAmt,
+                 &mPayment, &numMon,   &monInt);
+    printTab    (&loanAmt,  &mPayment, &numMon,  &monInt);
+
+    return 0;
+}//main
+
+
+void    getInfo     (float* loan, float* iRate, int* years)
+{
+    printf  ("\n");
+    printf  ("Amount of loan (principal):\t");
+    scanf   ("%f", loan);
+    printf  ("Yearly interest rate (percent):\t");
+    scanf   ("%f", iRate);
+    printf  ("Number of years to finance:\t");
+    scanf   ("%d", years);
+//printf ("\nin get function: %f, %f, %d\n", *loan, *iRate, *years);
+    return;
+}//getInfo
+
+
+void calcMoPay  (float*  loan, float* iRate, int*    years,
+                 float*  mPay, int*   nMon,  double* mInt)
+{
+    double   valP;                                                  //interim calculation holder
+    double   valQ;                                                  //interim calculation holder
+
+//printf ("\nin calc function: %f, %f, %d\n", *loan, *iRate, *years);
+    *nMon = (*years * MO_P_YR);
+//printf ("\nnumber of months: %d\n", *nMon);
+    *mInt = (*iRate / MO_P_YR) / 100;
+//printf ("\nmonthly interest: %f\n", *mInt);
+    valP  = pow((1 + *mInt), *nMon);
+//printf ("\nvalue P: %f\n", valP);
+    valQ  = (valP / (valP - 1));
+//printf ("\nvalue Q: %f\n", valQ);
+    *mPay = (*loan * *mInt * valQ);
+//printf ("\nmonthly payment: %f\n", *mPay);
+
+    return;
+}
+
+
+void printInfo  (float* loan, float* iRate, int*    years,
+                 float* mPay, int*   nMon,  double* mInt)
+{
+    printf("\n-----------------------------------------------------------\n\n");
+    printf("Loan Amount (principal): \t$%.2f\n\n", *loan);
+    printf("Interest rate per year : \t%.2f%\n\n", *iRate);
+    printf("Interest rate per month: \t%.2f% (%f)\n\n", *mInt, *mInt);
+    printf("Number of years financed:\t%.2d\n\n", *years);
+    printf("Number of months financed:\t%.3d\n\n", *nMon);
+    printf("Monthly Payment: \t\t$%.2f", *mPay);
+    printf("\n\n-----------------------------------------------------------\n");
+
+    return;
+}
+
+
+void printTab   (float* loan, float*  mPay,
+                 int*   nMon, double* mInt)
+{
+    float intPaid;
+    float prinPaid;
+    float oldBal;
+    float newBal;
+    float totPaid;
+    float tempMPay;
+    int   i;
+
+    printf("\t Old\t  Monthly   Interest   Principal     New\n");
+    printf ("Month  Balance    Payment     Paid       Paid      Balance\n");
+    printf("-----------------------------------------------------------\n");
+
+    //initializations
+    oldBal   = *loan;
+    intPaid  = *loan * *mInt;
+    prinPaid = *mPay - intPaid;
+    newBal   = *loan - prinPaid;
+    tempMPay = *mPay;
+    totPaid  =  0.0;
+    i        =  1;
+
+// @fixme (Casey#1#): make var for monthly payment and inc to calc totPaid
+    do
+    {
+        if (newBal <= tempMPay)
+            tempMPay    =    prinPaid + intPaid;
+
+printf ("%2d    $%.2f    $%.2f    $%.2f    $%.2f    $%.2f\n\n", i, oldBal, tempMPay, intPaid, prinPaid, newBal);
+//        if (oldBal < 1000.00 && intPaid < 10.00)
+//            printf ("%2d    $%.2f     $%.2f    $%.2f     $%.2f    $%.2f\n\n", i, oldBal, tempMPay, intPaid, prinPaid, newBal);
+//        else if (oldBal < 1000.00)
+/            printf ("%2d    $%.2f     $%.2f    $%.2f    $%.2f    $%.2f\n\n", i, oldBal, tempMPay, intPaid, prinPaid, newBal);
+        else
+            printf ("%2d    $%.2f    $%.2f    $%.2f    $%.2f    $%.2f\n\n", i, oldBal, tempMPay, intPaid, prinPaid, newBal);
+
+        oldBal      =    newBal;
+        intPaid     =    oldBal * *mInt;
+        prinPaid    =    tempMPay - intPaid;
+        newBal      =    oldBal - prinPaid;
+        totPaid     +=   tempMPay;
+
+    } while (i++, i <= *nMon);
+
+//printf("\nin printTab: tempMPay - $%.2f, newBal - %.2f\n\n", tempMPay, newBal);
+    printf("-----------------------------------------------------------\n");
+    printf ("Total Amount Paid:                                $%.2f\n", totPaid);
+    printf("-----------------------------------------------------------\n\n");
+
+    return;
+}

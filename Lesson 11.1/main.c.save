@@ -1,0 +1,63 @@
+/*
+*****************************************************************************************************************
+*                                 Name:            English to Pig Latin Translator                              *
+*                                 Version:         0.1                                                          *
+*                                 Chapter:         11.1, Assignment (p. 743, #41)                               *
+*                                 Author:          Casey Murphy                                                 *
+*                                 Date Created:    13 Nov 15                                                    *
+*                                 Last Modified:   13 Nov 15                                                    *
+* ------------------------------------------------------------------------------------------------------------- *
+*  Translates an English sentence into Pig Latin.                                                               *
+*****************************************************************************************************************
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void translate (char* pWord);
+
+int main (void)
+{
+    const int   MAXLN = 81;
+
+    char  eSentence[MAXLN];
+    char* pESnt = eSentence;
+    char* token;
+
+        printf("English to Pig Latin Translator\n\n");
+        printf("Type a complete sentence without punctuation and press Enter: \n\n");
+        gets(eSentence);
+        printf("\n");
+
+        token = strtok(pESnt, " ");
+        translate(token);
+
+        while (token != NULL)
+        {
+            token = strtok(NULL, " ");
+             translate(token);
+        }
+
+    return 0;
+}
+
+void translate (char* pWord)
+{
+    const char* pVOWELS = "aeiou";
+
+    int   diff;
+    char* wToken;
+    char* tWord;
+    char* suffix = "ay";
+
+    if (!(tWord = calloc((strlen(pWord) + 1), sizeof(char*)))) exit (1);
+    strncpy(tWord, pWord, strlen(pWord));
+    wToken = strpbrk(tWord, pVOWELS);
+    diff = wToken - tWord;
+    strncat(wToken, tWord, diff);
+    strcat(wToken, suffix);
+    printf("%s ", wToken);
+
+    return;
+}

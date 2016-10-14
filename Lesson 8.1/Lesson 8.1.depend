@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1444983877 source:c:\users\st01k\projects\c\lesson 8.1\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	<stdbool.h>
+	<unistd.h>
+	<windows.h>
+	<fcntl.h>
+

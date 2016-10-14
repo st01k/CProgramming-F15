@@ -1,0 +1,243 @@
+/*
+*****************************************************************************************************************
+*                                           Name:            Array Sort                                         *
+*                                           Version:         0.1                                                *
+*                                           Chapter:         8, Assignment (p. 554, #54)                        *
+*                                           Author:          Casey Murphy                                       *
+*                                           Date Created:    13 Oct 15                                          *
+*                                           Last Modified:   14 Oct 15                                          *
+* ------------------------------------------------------------------------------------------------------------- *
+* Generates a random array and a nearly ordered array to be sorted via selection, bubble, and insertion sorts.  *
+* Each sort also counts the number of comparisons and moves.  A report is generated to 'SortComparison.txt'     *
+* with sorted data and heuristic data.                                                                          *
+*****************************************************************************************************************
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>               //for srand in random number generation
+#include <stdbool.h>            //for flags
+
+#define ARY_SIZE 50             //amount of numbers to sort
+#define ARY_MAX  1000           //max array limit
+#define LN_SIZE  10             //for report generation
+#define NTH      10             //for nearly ordered array: every NTH number is modified
+#define MOD      - 5            //for nearly ordered array: modifier on NTH digit
+
+//function prototypes
+void populateRandAry    (int* rAryPtr);
+void populateNOrdAry    (int* nAryPtr);
+void selectionSort      (int ary[], int last, bool flag, int moves, int comparisons);
+void bubbleSort         (int ary[], int last, bool flag, int moves, int comparisons);
+void insertionSort      (int ary[], int last, bool flag, int moves, int comparisons);
+
+void printArray         (int element, int cur);
+void printFlag          (bool flag);
+void printHeuristics    (int moves, int comparisons);
+
+int main()
+{
+    int randAry[ARY_SIZE];
+    int nOrdAry[ARY_SIZE];
+    bool flag;                  //true is random list, false is nearly ordered list
+    int moves;
+    int comparisons = 0;
+
+    puts("\n\nPress Enter to populate the first array with random numbers...");
+    puts("------------------------------------------------------------------");
+    getchar();
+    populateRandAry(randAry);
+
+    puts("\n\nPress Enter to populate the second array with a nearly ordered list...");
+    puts("--------------------------------------------------------------------------");
+    getchar();
+    populateNOrdAry(nOrdAry);
+
+    puts("\n\nPress Enter to perform a selection sort on both arrays...");
+    puts("-------------------------------------------------------------");
+    getchar();
+    flag = true;
+    selectionSort(randAry, ARY_SIZE - 1, flag);
+    flag = false;
+    selectionSort(nOrdAry, ARY_SIZE - 1, flag);
+
+    puts("\n\nPress Enter to perform a bubble sort on both arrays...");
+    puts("----------------------------------------------------------");
+    getchar();
+    flag = true;
+    bubbleSort(randAry, ARY_SIZE - 1, flag);
+    flag = false;
+    bubbleSort(nOrdAry, ARY_SIZE - 1, flag);
+
+    puts("\n\nPress Enter to perform an insertion sort on both arrays...");
+    puts("--------------------------------------------------------------");
+    getchar();
+    flag = true;
+    insertionSort(randAry, ARY_SIZE - 1, flag);
+    flag = false;
+    insertionSort(nOrdAry, ARY_SIZE - 1, flag);
+
+    return 0;
+} // end main
+//--------------------------------------------------------------------------------------
+//
+void populateRandAry (int* rAryPtr)
+{
+    int i;
+
+    printf("Unsorted Random Numbers: \n\n");
+    srand (time(NULL));
+    for (i = 0; i < ARY_SIZE; i++)
+    {
+        rAryPtr[i] = rand() % ARY_MAX;
+        printArray(rAryPtr[i], i);
+    }
+
+    return;
+}
+//--------------------------------------------------------------------------------------
+//
+void populateNOrdAry(int* nAryPtr)
+{
+    int i;
+
+    printf("Unsorted Nearly Ordered Numbers: \n\n");
+    for (i = 0; i < ARY_SIZE; i++)
+    {
+        nAryPtr[i] = i;
+
+        if (!i)                             //skips 0 in modification
+            ;
+        else if (!(i % NTH))
+            nAryPtr[i] = i MOD;             //assigns all NTH values to MODified value
+
+        printArray(nAryPtr[i], i);
+    }
+
+    return;
+}
+//--------------------------------------------------------------------------------------
+//
+void selectionSort(int ary[], int last, bool flag)
+{
+    int smallest;
+    int tempHolder;
+    int i;
+
+    for (int cur = 0; cur < last; cur++)
+    {
+        smallest = cur;
+
+        for (int step = cur + 1; step <= last; step++)
+            if (ary[step] < ary[smallest])
+                smallest = step;
+
+        tempHolder = ary[cur];
+        ary[cur] = ary[smallest];
+        ary[smallest] = tempHolder;
+    }
+
+    printf("\n\nSelection Sorted ");
+    printFlag(flag);
+    printf(" Numbers: \n\n");
+    for (i = 0; i < ARY_SIZE; i++)
+        printArray(ary[i], i);
+
+    printHeuristics(moves, comparisons);
+
+    return;
+}
+//--------------------------------------------------------------------------------------
+//
+void bubbleSort(int ary[], int last, bool flag)
+{
+    int tempHolder;
+    int i;
+    int moves;
+    int comparisons;
+
+    for (int cur = 0; cur < last; cur++)
+        for (int step = last; step > cur; step--)
+            if (ary[step] < ary[step - 1])
+            {
+                tempHolder = ary[step];
+                ary[step] = ary[step - 1];
+                ary[step - 1] = tempHolder;
+            }
+
+    printf("\n\nBubble Sorted ");
+    printFlag(flag);
+    printf(" Numbers: \n\n");
+    for (i = 0; i < ARY_SIZE; i++)
+        printArray(ary[i], i);
+
+    printHeuristics(moves, comparisons);
+
+    return;
+}
+//--------------------------------------------------------------------------------------
+//
+void insertionSort(int ary[], int last, bool flag)
+{
+    int step;
+    int tempHolder;
+    bool located;
+    int i;
+    int moves;
+    int comparisons;
+
+    for (int cur = 0; cur <= last; cur++)
+    {
+        located = false;
+        tempHolder = ary[cur];
+        for (step = cur - 1; step >= 0 && !located;)
+            if (tempHolder < ary[step])
+            {
+                ary[step + 1] = ary[step];
+                step--;
+            }
+            else
+                located = true;
+        ary[step + 1] = tempHolder;
+    }
+
+    printf("\n\nInsertion Sorted ");
+    printFlag(flag);
+    printf(" Numbers: \n\n");
+    for (i = 0; i < ARY_SIZE; i++)
+        printArray(ary[i], i);
+
+    printHeuristics(moves, comparisons);
+
+    return;
+}
+//--------------------------------------------------------------------------------------
+//
+void printArray(int element, int cur)
+{
+        if (!((cur + 1) % LN_SIZE))
+            printf("%3d\n", element);
+        else
+            printf("%3d ", element);
+
+    return;
+}
+//--------------------------------------------------------------------------------------
+//
+void printFlag(bool flag)
+{
+    if (flag)
+        printf("Random");
+    else
+        printf("Nearly Ordered");
+
+    return;
+}
+//--------------------------------------------------------------------------------------
+//
+void printHeuristics    (int moves, int comparisons)
+{
+    printf("\nMoves: %5d\t\tComparisons: %5d\n", moves, comparisons);
+
+    return;
+}
