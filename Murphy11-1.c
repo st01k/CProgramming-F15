@@ -11,7 +11,7 @@
 * ------------------------------------------------------------------------------------------------------------------ *
 *  NOTE:  I believe the segmentation fault has to do with the strtok function.  I attempted many fixes, including    *
 *         removing calloc completely, but nothing seemed to work.  I read on StackOverflow that there were problems  *
-*         with strtok handling whie .  Not entirely sure what the problem is, though.                                *
+*         with strtok handling white space.  Not entirely sure what the problem is, though.                          *
 * http://stackoverflow.com/questions/7218625/what-are-the-differences-between-strtok-and-strsep-in-c/7219504#7219504 *
 **********************************************************************************************************************
 */

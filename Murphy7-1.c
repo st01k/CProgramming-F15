@@ -55,7 +55,7 @@ void greeting (void)
     printf ("\n\t\tWelcome to the text file analyzer.\n\n"                          );
     printf ("------------------------------------------------------------------\n"  );
     printf ("Usage: Save a copy of whatever text file you would like to analyze\n"  );
-    printf ("as testfile.txt inside the directory where this file is to use it.\n"  );
+    printf ("as testfile71.txt inside the directory where this file is to use it.\n"  );
     printf ("------------------------------------------------------------------\n\n");
 }
 //----------------------------------------------------------------------------
@@ -125,7 +125,7 @@ void countChars (FILE* spFile, int* cCountPtr)
 {
     char    cur;
 
-    if (!(spFile = fopen("testfile.txt", "r")))
+    if (!(spFile = fopen("testfile71.txt", "r")))
     {
         printf ("Error opening file\n");
         exit (2);
@@ -146,7 +146,7 @@ void countWords (FILE* spFile, int* wCountPtr)
     int  cur;
     char word = 'O';    // O is white space, I is words
 
-    if (!(spFile = fopen("testfile.txt", "r")))
+    if (!(spFile = fopen("testfile71.txt", "r")))
     {
         printf ("Error opening file\n");
         exit (2);
@@ -174,7 +174,7 @@ void countLines (FILE* spFile, int* lCountPtr)
     int cur;
     int preChar;
 
-    if (!(spFile = fopen("testfile.txt", "r")))
+    if (!(spFile = fopen("testfile71.txt", "r")))
     {
         printf ("Error opening file\n");
         exit (2);
@@ -199,7 +199,7 @@ void countSent (FILE* spFile, int* sCountPtr)
 {
     int cur;
 
-    if (!(spFile = fopen("testfile.txt", "r")))
+    if (!(spFile = fopen("testfile71.txt", "r")))
     {
         printf ("Error opening file\n");
         exit (2);

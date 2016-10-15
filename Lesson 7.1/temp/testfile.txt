@@ -1,5 +1,0 @@
-a b c d 
-There are 111 characters.  There are 23 words.
-These are 5 lines and 4 sentences.  
-Veritas Lux Mea.
-i
